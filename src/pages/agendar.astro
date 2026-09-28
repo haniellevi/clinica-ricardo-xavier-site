@@ -1,0 +1,60 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Migalhas from '../components/Migalhas.astro';
+import { especialidades } from '../data/especialidades';
+import { exames } from '../data/exames';
+import { site, wa } from '../data/site';
+const mig = [{ nome: 'Agendar', href: '/agendar' }];
+const fallback = wa('Olá! Vim pelo site e quero agendar um atendimento.');
+---
+<Base title="Agendar consulta ou exame em Bom Jesus-PI | Clínica Dr. Ricardo Xavier" description="Monte sua mensagem e agende consulta ou exame pelo WhatsApp em 1 minuto. Clínica Dr. Ricardo Xavier, Bom Jesus-PI." migalhas={mig}>
+  <section class="sec bg-creme" style="padding-top:32px">
+    <div class="wrap">
+      <Migalhas itens={mig} />
+      <div class="split" style="--cols:1fr 1.1fr">
+        <div>
+          <p class="eyebrow">Agendar</p>
+          <h1>Marque em 1 minuto</h1>
+          <p class="lead">Preencha e toque em enviar. O WhatsApp abre com a mensagem pronta. Ninguém recebe nada até você mandar.</p>
+          <p class="small muted">Não pedimos CPF nem sintomas aqui. Isso você conversa com a recepção ou com o profissional. Nada do que você digita fica salvo neste site.</p>
+          <div class="card" style="margin-top:24px"><strong>Prefere ligar?</strong><br /><a href={site.telefoneLink} data-evento="click_telefone">{site.telefone}</a></div>
+        </div>
+        <form class="card form" id="form-agendar" aria-label="Montar mensagem de agendamento" action={fallback} method="get">
+          <label>Seu nome<input type="text" name="nome" autocomplete="given-name" placeholder="Ex.: Maria" maxlength="60" /></label>
+          <label>O que você quer marcar?
+            <select name="o-que" required>
+              <optgroup label="Consulta">
+                {especialidades.map((e) => <option value={e.pedido}>{e.nome}</option>)}
+              </optgroup>
+              <optgroup label="Exame">
+                {exames.map((x) => <option value={x.pedido}>{x.nome}</option>)}
+              </optgroup>
+              <option value="um atendimento (não sei qual especialidade)">Não sei, preciso de orientação</option>
+            </select>
+          </label>
+          <label>Melhor período
+            <select name="periodo"><option value="qualquer horário">Qualquer horário</option><option value="de manhã">Manhã</option><option value="à tarde">Tarde</option></select>
+          </label>
+          <div class="previa" aria-live="polite"><strong>Mensagem que vai para o WhatsApp</strong><span id="previa">Olá! Quero agendar uma consulta de ginecologia, qualquer horário.</span></div>
+          <button class="btn btn-wa" type="submit" data-evento="click_whatsapp" data-origem="agendar-form"><Icon name="wa" />Enviar pelo WhatsApp</button>
+        </form>
+      </div>
+    </div>
+  </section>
+  <script define:vars={{ numero: site.whatsappNumero }}>
+    const f = document.getElementById('form-agendar');
+    const prev = document.getElementById('previa');
+    const montar = () => {
+      const d = new FormData(f);
+      const nome = String(d.get('nome') || '').trim();
+      return `Olá!${nome ? ` Sou ${nome}.` : ''} Quero agendar ${d.get('o-que')}, ${d.get('periodo')}.`;
+    };
+    f.addEventListener('input', () => (prev.textContent = montar()));
+    prev.textContent = montar();
+    f.addEventListener('submit', (ev) => {
+      ev.preventDefault();
+      window.open(`https://wa.me/${numero}?text=${encodeURIComponent(montar())}`, '_blank', 'noopener');
+    });
+  </script>
+</Base>

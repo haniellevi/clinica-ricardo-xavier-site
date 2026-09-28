@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Migalhas from '../components/Migalhas.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { site } from '../data/site';
+const mig = [{ nome: 'Postos de coleta', href: '/postos-de-coleta' }];
+const mapa = (q: string) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+const ld = site.postos.map((p) => ({
+  '@context': 'https://schema.org',
+  '@type': 'DiagnosticLab',
+  name: `${p.nome} · Clínica Dr. Ricardo Xavier`,
+  address: { '@type': 'PostalAddress', streetAddress: p.endereco, addressLocality: p.cidade, addressRegion: 'PI', addressCountry: 'BR' },
+  parentOrganization: { '@id': `${site.url}/#clinica` },
+}));
+const msg = 'Olá! Quero saber o preparo para colher exames no posto de coleta.';
+---
+<Base title="Postos de coleta: Bom Jesus, Alvorada do Gurguéia, Colônia do Gurguéia e Eliseu Martins" description="Colete exames de sangue perto de casa. Postos da Clínica Dr. Ricardo Xavier em Bom Jesus, Alvorada do Gurguéia, Colônia do Gurguéia e Eliseu Martins (PI)." jsonld={ld} migalhas={mig} msg={msg}>
+  <section class="pagina-topo bg-creme">
+    <div class="wrap">
+      <Migalhas itens={mig} />
+      <p class="eyebrow">Postos de coleta</p>
+      <h1>Colete exames perto de casa</h1>
+      <p class="lead">Além da sede, em Bom Jesus, o laboratório da Clínica Dr. Ricardo Xavier coleta exames em quatro pontos da região. O resultado sai no mesmo portal online.</p>
+    </div>
+  </section>
+  <section class="sec bg-branco">
+    <div class="wrap grid g2" style="gap:20px">
+      <div class="card" style="border-color:var(--vermelho)">
+        <span class="tag">Sede</span>
+        <h2 style="font-size:24px;margin:14px 0 6px">Bom Jesus · Centro</h2>
+        <p class="muted" style="margin:0 0 14px">{site.endereco.rua}, {site.endereco.bairro}</p>
+        <a href={site.mapa} target="_blank" rel="noopener" style="display:inline-flex;gap:8px;align-items:center;font-weight:700"><Icon name="pin" />Ver no mapa</a>
+      </div>
+      {site.postos.map((p) => (
+        <div class="card">
+          <h2 style="font-size:24px;margin:0 0 6px">{p.cidade}</h2>
+          <p style="margin:0 0 4px;font-weight:600">{p.nome}</p>
+          <p class="muted" style="margin:0 0 14px">{p.endereco}, {p.cidade}-PI</p>
+          <a href={mapa(`${p.endereco}, ${p.cidade} - PI`)} target="_blank" rel="noopener" style="display:inline-flex;gap:8px;align-items:center;font-weight:700"><Icon name="pin" />Ver no mapa</a>
+        </div>
+      ))}
+    </div>
+  </section>
+  <section class="sec-sm bg-areia">
+    <div class="wrap split">
+      <div><h2 style="font-size:32px">Antes de ir ao posto</h2></div>
+      <div class="card"><ul class="lista" style="margin:0"><li>Confirme pelo WhatsApp o horário de coleta do posto e o preparo do seu pedido.</li><li>Leve pedido médico e documento com foto.</li><li>Veja o resultado no <a href="/resultados">portal do laboratório</a>.</li><li>Dúvida sobre jejum? Leia <a href="/blog/exame-de-sangue-precisa-de-jejum">quais exames precisam de jejum</a>.</li></ul></div>
+    </div>
+  </section>
+  <CtaBand titulo="Confirme o horário do posto" texto="A recepção informa horário e preparo pelo WhatsApp." msg={msg} label="Perguntar pelo WhatsApp" origem="postos" />
+</Base>

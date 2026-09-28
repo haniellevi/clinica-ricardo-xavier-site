@@ -1,0 +1,66 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Migalhas from '../components/Migalhas.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { site } from '../data/site';
+const mig = [{ nome: 'Sobre', href: '/sobre' }];
+const ld = [
+  { '@context': 'https://schema.org', '@type': 'Physician', name: 'Dr. Ricardo Xavier', identifier: 'CRM 2421 · RQE 901', medicalSpecialty: ['https://schema.org/Gynecologic', 'https://schema.org/Obstetric'], worksFor: { '@id': `${site.url}/#clinica` } },
+  { '@context': 'https://schema.org', '@type': 'Person', name: 'Malba Xavier', honorificPrefix: 'Drª', jobTitle: 'Farmacêutica, responsável técnica do laboratório', identifier: 'CRF-PI 0458', worksFor: { '@id': `${site.url}/#clinica` } },
+  { '@context': 'https://schema.org', '@type': 'Hospital', name: site.hospital, address: { '@type': 'PostalAddress', streetAddress: site.endereco.rua, addressLocality: 'Bom Jesus', addressRegion: 'PI', postalCode: site.endereco.cep, addressCountry: 'BR' }, telephone: '+55-89-3562-2897', openingHours: 'Mo-Su 00:00-23:59' },
+];
+---
+<Base title="Sobre a clínica e o Hospital Maternidade | Clínica Dr. Ricardo Xavier, Bom Jesus-PI" description="Clínica Dr. Ricardo Xavier: consultas, laboratório, imagem e ressonância no Centro de Bom Jesus-PI. No mesmo prédio, o Hospital Maternidade com urgência 24 horas." jsonld={ld} migalhas={mig}>
+  <section class="hero hero-baixo" aria-label="Fachada">
+    <img src="/img/fachada-1920.webp" srcset="/img/fachada-900.webp 900w, /img/fachada-1920.webp 1920w" sizes="100vw" alt="Prédio da Clínica Dr. Ricardo Xavier e do Hospital Maternidade, em Bom Jesus-PI" width="1920" height="1080" />
+  </section>
+  <section class="sec bg-branco">
+    <div class="wrap">
+      <Migalhas itens={mig} />
+      <div class="split">
+        <div><p class="eyebrow">Sobre</p><h1>Clínica e hospital no Centro de Bom Jesus</h1></div>
+        <div class="artigo">
+          <p>A Clínica Dr. Ricardo Xavier reúne consultas em 20 áreas, laboratório, exames de imagem e ressonância magnética no mesmo endereço, na Praça 7 de Setembro.</p>
+          <p>No mesmo prédio funciona o {site.hospital}, com urgência 24 horas.</p>
+          <p>Para quem mora em Alvorada do Gurguéia, Colônia do Gurguéia e Eliseu Martins, a clínica mantém <a href="/postos-de-coleta">postos de coleta</a> perto de casa.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="sec bg-vinho" id="urgencia">
+    <div class="wrap split split-c" style="--cols:1.2fr 1fr">
+      <div><p class="eyebrow">{site.hospital}</p><h2>Urgência 24 horas</h2><p class="lead">Dia e noite, no mesmo prédio da clínica. Em risco de vida, ligue 192.</p></div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <a class="btn btn-light" href={site.telefoneLink} data-evento="click_telefone"><Icon name="fone" />Ligar {site.telefone}</a>
+        <a class="btn btn-outline-light" href={site.mapa} target="_blank" rel="noopener"><Icon name="pin" />Como chegar</a>
+      </div>
+    </div>
+  </section>
+  <section class="sec bg-areia">
+    <div class="wrap">
+      <h2>Responsáveis técnicos</h2>
+      <div class="grid g2" style="margin-top:24px;max-width:860px">
+        {site.responsaveis.map((r) => <div class="card"><h3 style="margin:0">{r.nome}</h3><p class="muted" style="margin:6px 0 14px">{r.funcao} · {r.area}</p><span class="tag">{r.registro}</span></div>)}
+      </div>
+    </div>
+  </section>
+  <section class="sec bg-branco">
+    <div class="wrap split split-c" style="--cols:1fr 1fr">
+      <div>
+        <h2>Como chegar</h2>
+        <p class="lead">{site.endereco.rua}, {site.endereco.bairro}, {site.endereco.cidade}-{site.endereco.uf}, {site.endereco.cep}.</p>
+        <p class="muted">CNPJ {site.cnpj} · {site.razaoSocial}</p>
+        <div class="btns" style="margin-top:20px"><a class="btn btn-wa" href={site.mapa} target="_blank" rel="noopener"><Icon name="pin" />Abrir no Google Maps</a></div>
+      </div>
+      <div class="card card-creme" style="display:flex;flex-direction:column;gap:10px">
+        <strong>Contato</strong>
+        <span>WhatsApp: {site.whatsapp}</span>
+        <span>Telefone: <a href={site.telefoneLink}>{site.telefone}</a></span>
+        <span>E-mail: <a href={`mailto:${site.email}`}>{site.email}</a></span>
+        <span><a href={site.instagram} target="_blank" rel="noopener">Instagram</a> · <a href={site.facebook} target="_blank" rel="noopener">Facebook</a></span>
+      </div>
+    </div>
+  </section>
+  <CtaBand msg="Olá! Vim pelo site e quero agendar um atendimento." origem="sobre" />
+</Base>

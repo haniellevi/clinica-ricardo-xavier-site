@@ -1,0 +1,60 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Wa from '../../components/Wa.astro';
+import Faq from '../../components/Faq.astro';
+import Migalhas from '../../components/Migalhas.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { posts } from '../../data/posts';
+import { site } from '../../data/site';
+
+export function getStaticPaths() {
+  return posts.map((p) => ({ params: { slug: p.slug }, props: { p } }));
+}
+const { p } = Astro.props;
+const msg = `Olá! Li o artigo do site e quero agendar ${p.pedido}.`;
+const mig = [{ nome: 'Blog', href: '/blog' }, { nome: p.titulo, href: `/blog/${p.slug}` }];
+const ld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: p.titulo,
+    description: p.descricao,
+    datePublished: p.data,
+    dateModified: p.data,
+    inLanguage: 'pt-BR',
+    image: `${site.url}/img/og.jpg`,
+    author: { '@id': `${site.url}/#clinica` },
+    publisher: { '@id': `${site.url}/#clinica` },
+    mainEntityOfPage: `${site.url}/blog/${p.slug}`,
+  },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: p.faqs.map((f) => ({ '@type': 'Question', name: f.p, acceptedAnswer: { '@type': 'Answer', text: f.r } })) },
+];
+const dataBr = new Date(p.data + 'T12:00:00').toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<Base title={`${p.titulo} | Clínica Dr. Ricardo Xavier`} description={p.descricao} jsonld={ld} migalhas={mig} msg={msg} tipo="article">
+  <article class="sec bg-branco" style="padding-top:32px">
+    <div class="wrap">
+      <Migalhas itens={mig} />
+      <div class="artigo">
+        <span class="tag">{p.categoria}</span>
+        <h1 style="margin-top:16px">{p.titulo}</h1>
+        <p class="small muted">Publicado em <time datetime={p.data}>{dataBr}</time> · Clínica Dr. Ricardo Xavier, Bom Jesus-PI</p>
+        <div class="card card-creme resposta" style="margin:28px 0"><strong>Resposta rápida</strong><p>{p.resposta}</p></div>
+        {p.tabela && (
+          <table>
+            <thead><tr><th scope="col">{p.tabela.cab[0]}</th><th scope="col">{p.tabela.cab[1]}</th></tr></thead>
+            <tbody>{p.tabela.linhas.map(([a, b]) => <tr><td>{a}</td><td>{b}</td></tr>)}</tbody>
+          </table>
+        )}
+        <Fragment set:html={p.corpo} />
+        <div class="btns" style="margin-top:32px"><Wa msg={msg} label="Agendar pelo WhatsApp" origem={`blog-${p.slug}`} /></div>
+        <h2>Veja também</h2>
+        <div class="grid g3" style="gap:10px">{p.relacionados.map((r) => <a class="chip" href={r.href}>{r.nome}<Icon name="seta" size={18} /></a>)}</div>
+        <p class="aviso">Conteúdo informativo. Não substitui a consulta. Em emergência, procure a urgência 24h ou ligue 192.</p>
+      </div>
+    </div>
+  </article>
+  <Faq faqs={p.faqs} titulo="Perguntas sobre o tema" />
+  <CtaBand msg={msg} origem={`blog-${p.slug}-final`} />
+</Base>

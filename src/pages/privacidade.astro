@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import Migalhas from '../components/Migalhas.astro';
+import { site } from '../data/site';
+const mig = [{ nome: 'Privacidade', href: '/privacidade' }];
+---
+<Base title="Política de privacidade | Clínica Dr. Ricardo Xavier" description="Como o site da Clínica Dr. Ricardo Xavier trata seus dados, conforme a LGPD." migalhas={mig}>
+  <section class="sec bg-branco" style="padding-top:32px">
+    <div class="wrap artigo">
+      <Migalhas itens={mig} />
+      <h1>Política de privacidade</h1>
+      <p>Esta política explica como o site da {site.razaoSocial} (CNPJ {site.cnpj}) trata dados pessoais, conforme a Lei Geral de Proteção de Dados (Lei 13.709/2018).</p>
+      <h2>O que o site coleta</h2>
+      <p>O site não tem cadastro, login ou formulário que envie dados para a clínica. A página Agendar apenas monta uma mensagem no seu próprio aparelho. Nada é salvo: a mensagem só chega à clínica se você tocar em enviar no WhatsApp.</p>
+      <p>O site pode usar medição de audiência sem identificar você (páginas visitadas e cliques nos botões de WhatsApp) para melhorar o atendimento.</p>
+      <h2>Conversas no WhatsApp</h2>
+      <p>Os dados que você envia pelo WhatsApp (nome, pedido médico) são usados só para agendar e atender você, e tratados com sigilo profissional.</p>
+      <h2>Resultados de exames</h2>
+      <p>Os portais de resultados são sistemas próprios, acessados com o protocolo entregue no dia do exame.</p>
+      <h2>Seus direitos</h2>
+      <p>Você pode pedir acesso, correção ou exclusão dos seus dados pelo e-mail <a href={`mailto:${site.email}`}>{site.email}</a> ou pelo telefone {site.telefone}.</p>
+      <p class="small muted">Atualizada em setembro de 2026.</p>
+    </div>
+  </section>
+</Base>

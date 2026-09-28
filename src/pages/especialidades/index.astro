@@ -1,0 +1,33 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Migalhas from '../../components/Migalhas.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { especialidades } from '../../data/especialidades';
+const medicas = especialidades.filter((e) => e.medica);
+const outras = especialidades.filter((e) => !e.medica);
+const mig = [{ nome: 'Especialidades', href: '/especialidades' }];
+---
+<Base title="Especialidades em Bom Jesus-PI | Clínica Dr. Ricardo Xavier" description="20 áreas de atendimento em Bom Jesus-PI: ginecologia, obstetrícia, cardiologia, pediatria, ortopedia, dermatologia e mais. Agende pelo WhatsApp." migalhas={mig}>
+  <section class="pagina-topo bg-creme">
+    <div class="wrap">
+      <Migalhas itens={mig} />
+      <p class="eyebrow">Especialidades</p>
+      <h1>Especialidades em Bom Jesus-PI</h1>
+      <p class="lead">A Clínica Dr. Ricardo Xavier atende 20 áreas no mesmo endereço, na Praça 7 de Setembro. Escolha a área para ver quando procurar, como é a consulta e agendar pelo WhatsApp.</p>
+    </div>
+  </section>
+  <section class="sec bg-branco">
+    <div class="wrap">
+      <h2>Especialidades médicas</h2>
+      <div class="grid g3" style="margin-bottom:56px">
+        {medicas.map((e) => <a class="card" href={`/especialidades/${e.slug}`}><h3 style="margin:0">{e.nome}</h3><span class="small muted">{e.resumo.split('. ')[0]}.</span><span style="color:var(--vermelho);font-weight:700;display:flex;gap:8px;align-items:center">Ver e agendar <Icon name="seta" size={18} /></span></a>)}
+      </div>
+      <h2>Saúde multiprofissional</h2>
+      <div class="grid g3">
+        {outras.map((e) => <a class="card" href={`/especialidades/${e.slug}`}><h3 style="margin:0">{e.nome}</h3><span class="small muted">{e.resumo.split('. ')[0]}.</span><span style="color:var(--vermelho);font-weight:700;display:flex;gap:8px;align-items:center">Ver e agendar <Icon name="seta" size={18} /></span></a>)}
+      </div>
+    </div>
+  </section>
+  <CtaBand titulo="Não sabe qual especialista procurar?" texto="Conte o que está sentindo para a recepção. Ela indica o caminho." msg="Olá! Não sei qual especialista procurar. Podem me orientar?" origem="especialidades" />
+</Base>

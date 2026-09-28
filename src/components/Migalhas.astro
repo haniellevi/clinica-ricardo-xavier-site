@@ -1,0 +1,12 @@
+---
+// itens: [{nome, href}] — o último é a página atual
+const { itens } = Astro.props;
+const todos = [{ nome: 'Início', href: '/' }, ...itens];
+---
+<nav class="migalhas" aria-label="Você está em">
+  <ol>
+    {todos.map((i: any, n: number) => (
+      <li>{n < todos.length - 1 ? <a href={i.href}>{i.nome}</a> : <span aria-current="page">{i.nome}</span>}</li>
+    ))}
+  </ol>
+</nav>

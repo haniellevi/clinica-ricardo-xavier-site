@@ -1,0 +1,13 @@
+---
+const { faqs, titulo = 'Perguntas frequentes', eyebrow = '', bg = 'bg-creme' } = Astro.props;
+---
+<section class={`sec ${bg}`}>
+  <div class="wrap split">
+    <div>{eyebrow && <p class="eyebrow">{eyebrow}</p>}<h2>{titulo}</h2></div>
+    <div class="faqs">
+      {faqs.map((f: any, i: number) => (
+        <details class="card" open={i === 0}><summary>{f.p}</summary><p>{f.r}</p></details>
+      ))}
+    </div>
+  </div>
+</section>

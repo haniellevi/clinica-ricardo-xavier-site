@@ -1,0 +1,164 @@
+---
+import '../styles/global.css';
+import Icon from '../components/Icon.astro';
+import { site, wa } from '../data/site';
+import { especialidades } from '../data/especialidades';
+
+const {
+  title,
+  description,
+  image = '/img/og.jpg',
+  jsonld = [],
+  migalhas = [],
+  msg = 'Olá! Vim pelo site e quero agendar um atendimento.',
+  tipo = 'website',
+} = Astro.props;
+
+const indexar = import.meta.env.PUBLIC_INDEXAR === 'true';
+const canonical = new URL(Astro.url.pathname, site.url).href;
+const path = Astro.url.pathname;
+const ativo = (h: string) => (path.startsWith(h) ? 'page' : undefined);
+
+const clinica = {
+  '@context': 'https://schema.org',
+  '@type': 'MedicalClinic',
+  '@id': `${site.url}/#clinica`,
+  name: site.nome,
+  legalName: site.razaoSocial,
+  taxID: site.cnpj,
+  slogan: site.slogan,
+  url: site.url,
+  logo: `${site.url}/img/rx.png`,
+  image: `${site.url}/img/og.jpg`,
+  telephone: '+55-89-3562-2897',
+  email: site.email,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.endereco.rua,
+    addressLocality: site.endereco.cidade,
+    addressRegion: site.endereco.uf,
+    postalCode: site.endereco.cep,
+    addressCountry: 'BR',
+  },
+  areaServed: ['Bom Jesus', 'Alvorada do Gurguéia', 'Colônia do Gurguéia', 'Eliseu Martins'].map((n) => ({ '@type': 'City', name: `${n}, PI` })),
+  medicalSpecialty: [...new Set(especialidades.map((e) => e.schema).filter(Boolean))],
+  sameAs: [site.instagram, site.facebook],
+  contactPoint: { '@type': 'ContactPoint', telephone: '+55-89-99987-0009', contactType: 'appointments', availableLanguage: 'pt-BR' },
+};
+const breadcrumb = migalhas.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [{ nome: 'Início', href: '/' }, ...migalhas].map((m: any, i: number) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: m.nome,
+        item: new URL(m.href, site.url).href,
+      })),
+    }
+  : null;
+const blocos = [clinica, breadcrumb, ...jsonld].filter(Boolean);
+const menu = [
+  ['/especialidades', 'Especialidades'],
+  ['/exames', 'Exames'],
+  ['/resultados', 'Resultados'],
+  ['/postos-de-coleta', 'Postos de coleta'],
+  ['/sobre', 'Sobre'],
+  ['/blog', 'Blog'],
+];
+---
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  {!indexar && <meta name="robots" content="noindex, nofollow" />}
+  <meta name="theme-color" content="#c4141c" />
+  <link rel="icon" href="/favicon.png" type="image/png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="preload" href="/fonts/montserrat-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <meta property="og:type" content={tipo} />
+  <meta property="og:locale" content="pt_BR" />
+  <meta property="og:site_name" content={site.nome} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={new URL(image, site.url).href} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="sitemap" href="/sitemap-index.xml" />
+  {blocos.map((b) => <script type="application/ld+json" set:html={JSON.stringify(b)} />)}
+  <slot name="head" />
+</head>
+<body>
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+  <header class="topo">
+    <div class="wrap">
+      <a class="marca" href="/" aria-label={`${site.nome}, página inicial`}>
+        <img src="/img/rx.png" alt="" width="240" height="152" />
+        <span><strong>Clínica Dr. Ricardo Xavier</strong><span class="marca-sub">Consultas e exames · Bom Jesus-PI</span></span>
+      </a>
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir menu"><Icon name="menu" size={22} /></button>
+      <nav id="menu" class="menu" aria-label="Principal">
+        {menu.map(([h, n]) => <a href={h} aria-current={ativo(h)}>{n}</a>)}
+      </nav>
+      <a class="btn btn-wa btn-agendar" href="/agendar"><Icon name="wa" />Agendar</a>
+    </div>
+  </header>
+
+  <main id="conteudo"><slot /></main>
+
+  <footer class="rodape">
+    <div class="wrap rodape-grid">
+      <div>
+        <p style="display:flex;align-items:center;gap:12px;color:#fff;font-weight:800;font-size:17px"><img src="/img/rx.png" alt="" width="64" height="40" style="width:64px;background:#fff;border-radius:10px;padding:6px" />{site.nome}</p>
+        <p>{site.endereco.rua}, {site.endereco.bairro}<br />{site.endereco.cidade}-{site.endereco.uf}, {site.endereco.cep}</p>
+        <p>WhatsApp <a href={wa(msg)} data-evento="click_whatsapp" data-origem="rodape">{site.whatsapp}</a><br />Telefone <a href={site.telefoneLink}>{site.telefone}</a><br /><a href={`mailto:${site.email}`}>{site.email}</a></p>
+      </div>
+      <div>
+        <h2>Atendimento</h2>
+        <ul><li><a href="/agendar">Agendar</a></li><li><a href="/especialidades">Especialidades</a></li><li><a href="/exames">Exames</a></li><li><a href="/resultados">Resultados</a></li><li><a href="/postos-de-coleta">Postos de coleta</a></li></ul>
+      </div>
+      <div>
+        <h2>A clínica</h2>
+        <ul><li><a href="/sobre">Sobre</a></li><li><a href="/blog">Blog</a></li><li><a href="/privacidade">Privacidade</a></li><li><a href={site.instagram} rel="noopener" target="_blank">Instagram</a></li><li><a href={site.facebook} rel="noopener" target="_blank">Facebook</a></li></ul>
+      </div>
+      <div>
+        <h2>Responsáveis técnicos</h2>
+        {site.responsaveis.map((r) => <p>{r.nome}<br />{r.registro}</p>)}
+      </div>
+    </div>
+    <div class="wrap rodape-base">
+      <span>{site.razaoSocial} · CNPJ {site.cnpj}</span>
+      <span>Desenvolvido por <a href="https://sitesespeciais.com.br">Sites Especiais</a></span>
+    </div>
+  </footer>
+
+  <div class="barra-fixa">
+    <a class="btn btn-wa" href={wa(msg)} target="_blank" rel="noopener" data-evento="click_whatsapp" data-origem="barra-fixa"><Icon name="wa" />WhatsApp</a>
+    <a class="btn btn-ghost" href={site.telefoneLink} data-evento="click_telefone"><Icon name="fone" />Ligar</a>
+  </div>
+  <a class="fab" href={wa(msg)} target="_blank" rel="noopener" aria-label="Conversar pelo WhatsApp" data-evento="click_whatsapp" data-origem="fab"><Icon name="wa" size={28} /></a>
+
+  <script>
+    const b = document.querySelector('.menu-btn');
+    const m = document.getElementById('menu');
+    b?.addEventListener('click', () => {
+      const aberto = m?.classList.toggle('aberto');
+      b.setAttribute('aria-expanded', String(!!aberto));
+      b.setAttribute('aria-label', aberto ? 'Fechar menu' : 'Abrir menu');
+    });
+    // Medição: dispara evento para GA4/Vercel quando existir.
+    document.addEventListener('click', (e) => {
+      const a = (e.target as HTMLElement).closest('[data-evento]') as HTMLElement | null;
+      if (!a) return;
+      const w = window as any;
+      const dados = { origem: a.dataset.origem || location.pathname };
+      w.gtag?.('event', a.dataset.evento, dados);
+      w.va?.('event', { name: a.dataset.evento, data: dados });
+    });
+  </script>
+</body>
+</html>

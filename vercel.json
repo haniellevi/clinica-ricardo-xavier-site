@@ -1,0 +1,164 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "astro",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/obstetricia",
+      "destination": "/especialidades/obstetricia",
+      "permanent": true
+    },
+    {
+      "source": "/ginecologia",
+      "destination": "/especialidades/ginecologia",
+      "permanent": true
+    },
+    {
+      "source": "/clinica-medica",
+      "destination": "/especialidades/clinica-medica",
+      "permanent": true
+    },
+    {
+      "source": "/nutricao",
+      "destination": "/especialidades/nutricao",
+      "permanent": true
+    },
+    {
+      "source": "/psicologia",
+      "destination": "/especialidades/psicologia",
+      "permanent": true
+    },
+    {
+      "source": "/urologia",
+      "destination": "/especialidades/urologia",
+      "permanent": true
+    },
+    {
+      "source": "/fisioterapia",
+      "destination": "/especialidades/fisioterapia",
+      "permanent": true
+    },
+    {
+      "source": "/cirurgia-vascular",
+      "destination": "/especialidades/cirurgia-vascular",
+      "permanent": true
+    },
+    {
+      "source": "/dermatologia",
+      "destination": "/especialidades/dermatologia",
+      "permanent": true
+    },
+    {
+      "source": "/cardiologia",
+      "destination": "/especialidades/cardiologia",
+      "permanent": true
+    },
+    {
+      "source": "/otorrinolaringologia",
+      "destination": "/especialidades/otorrinolaringologia",
+      "permanent": true
+    },
+    {
+      "source": "/odontologia",
+      "destination": "/especialidades/odontologia",
+      "permanent": true
+    },
+    {
+      "source": "/oftalmologia",
+      "destination": "/especialidades/oftalmologia",
+      "permanent": true
+    },
+    {
+      "source": "/pediatria",
+      "destination": "/especialidades/pediatria",
+      "permanent": true
+    },
+    {
+      "source": "/psiquiatria",
+      "destination": "/especialidades/psiquiatria",
+      "permanent": true
+    },
+    {
+      "source": "/fonoaudiologia",
+      "destination": "/especialidades/fonoaudiologia",
+      "permanent": true
+    },
+    {
+      "source": "/ortopedia-traumatologia",
+      "destination": "/especialidades/ortopedia-traumatologia",
+      "permanent": true
+    },
+    {
+      "source": "/nefrologia",
+      "destination": "/especialidades/nefrologia",
+      "permanent": true
+    },
+    {
+      "source": "/neurologia",
+      "destination": "/especialidades/neurologia",
+      "permanent": true
+    },
+    {
+      "source": "/coloproctologia",
+      "destination": "/especialidades/coloproctologia",
+      "permanent": true
+    },
+    {
+      "source": "/coloprocotologia",
+      "destination": "/especialidades/coloproctologia",
+      "permanent": true
+    },
+    {
+      "source": "/ortopedia",
+      "destination": "/especialidades/ortopedia-traumatologia",
+      "permanent": true
+    },
+    {
+      "source": "/2020/07/06/ola-mundo",
+      "destination": "/blog",
+      "permanent": true
+    },
+    {
+      "source": "/category/:path*",
+      "destination": "/blog",
+      "permanent": true
+    },
+    {
+      "source": "/author/:path*",
+      "destination": "/sobre",
+      "permanent": true
+    },
+    {
+      "source": "/feed",
+      "destination": "/blog",
+      "permanent": true
+    },
+    {
+      "source": "/comments/feed",
+      "destination": "/blog",
+      "permanent": true
+    },
+    {
+      "source": "/sitemap_index.xml",
+      "destination": "/sitemap-index.xml",
+      "permanent": true
+    },
+    {
+      "source": "/:name(page|post|category|author)-sitemap.xml",
+      "destination": "/sitemap-index.xml",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(fonts|img)/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ]
+}

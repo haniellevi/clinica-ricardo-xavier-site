@@ -1,0 +1,7 @@
+---
+// Botão de WhatsApp com mensagem pronta e marcação para medir cliques.
+import Icon from './Icon.astro';
+import { wa } from '../data/site';
+const { msg, label = 'Agendar pelo WhatsApp', class: cls = 'btn btn-wa', origem = '' } = Astro.props;
+---
+<a class={cls} href={wa(msg)} target="_blank" rel="noopener" data-evento="click_whatsapp" data-origem={origem}><Icon name="wa" />{label}</a>

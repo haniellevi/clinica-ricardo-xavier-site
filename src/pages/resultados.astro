@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Wa from '../components/Wa.astro';
+import Migalhas from '../components/Migalhas.astro';
+import { site } from '../data/site';
+const mig = [{ nome: 'Resultados', href: '/resultados' }];
+---
+<Base title="Resultado de exame online | Clínica Dr. Ricardo Xavier, Bom Jesus-PI" description="Veja o resultado dos seus exames de laboratório e de imagem da Clínica Dr. Ricardo Xavier pela internet." migalhas={mig} msg="Olá! Preciso de ajuda para ver o resultado do meu exame.">
+  <section class="sec bg-branco" style="padding-top:32px">
+    <div class="wrap">
+      <Migalhas itens={mig} />
+      <p class="eyebrow">Resultados</p>
+      <h1>Resultado de exame</h1>
+      <p class="lead">Escolha o portal. Use os dados de acesso do protocolo que você recebeu no dia do exame.</p>
+      <div class="grid g2" style="margin-top:36px;gap:20px">
+        <a class="card card-vermelho" href={site.resultados.laboratorio} target="_blank" rel="noopener" style="padding:40px"><Icon name="frasco" size={28} /><strong style="font-size:28px">Laboratório</strong><span style="color:#ffe3e3">Exames de sangue, urina e fezes</span><span style="font-weight:700;display:flex;gap:8px;align-items:center">Abrir portal <Icon name="seta" size={18} /></span></a>
+        <a class="card card-vinho" href={site.resultados.imagem} target="_blank" rel="noopener" style="padding:40px"><Icon name="doc" size={28} /><strong style="font-size:28px">Imagem</strong><span style="color:#e3cfcf">Ressonância e outros laudos de imagem</span><span style="font-weight:700;display:flex;gap:8px;align-items:center">Abrir portal <Icon name="seta" size={18} /></span></a>
+      </div>
+    </div>
+  </section>
+  <section class="sec-sm bg-creme">
+    <div class="wrap split split-c">
+      <div><h2 style="font-size:32px">Não achou o protocolo?</h2><p class="lead">A recepção ajuda pelo WhatsApp. Tenha em mãos o nome completo do paciente e a data do exame.</p></div>
+      <div><Wa msg="Olá! Preciso de ajuda para ver o resultado do meu exame." label="Pedir ajuda pelo WhatsApp" origem="resultados" /></div>
+    </div>
+  </section>
+</Base>

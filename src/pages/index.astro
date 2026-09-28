@@ -1,0 +1,126 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Wa from '../components/Wa.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { site } from '../data/site';
+import { especialidades } from '../data/especialidades';
+import { exames } from '../data/exames';
+import { posts } from '../data/posts';
+
+const faqs = [
+  { p: 'Como agendo uma consulta?', r: 'Pelo WhatsApp (89) 99987-0009. Diga a especialidade e o melhor dia. A recepção responde com os horários livres.' },
+  { p: 'A clínica atende convênio?', r: 'Pergunte à recepção pelo WhatsApp informando o nome do seu plano.' },
+  { p: 'Onde vejo o resultado do meu exame?', r: 'Na página Resultados: um portal para laboratório e outro para exames de imagem.' },
+  { p: 'Onde fica a clínica?', r: 'Praça 7 de Setembro, 165, Centro, Bom Jesus-PI. No mesmo prédio funciona o Hospital Maternidade Dr. Ricardo Xavier, com urgência 24 horas.' },
+];
+const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.p, acceptedAnswer: { '@type': 'Answer', text: f.r } })) };
+---
+<Base
+  title="Clínica Dr. Ricardo Xavier | Consultas, exames e ressonância em Bom Jesus-PI"
+  description="Consultas em 20 especialidades, laboratório, exames de imagem e ressonância magnética no Centro de Bom Jesus-PI. Agende pelo WhatsApp (89) 99987-0009."
+  jsonld={[faqLd]}
+>
+  <section class="hero">
+    <img src="/img/fachada-1920.webp" srcset="/img/fachada-900.webp 900w, /img/fachada-1920.webp 1920w" sizes="100vw" alt="Prédio da Clínica Dr. Ricardo Xavier e do Hospital Maternidade, no Centro de Bom Jesus-PI" width="1920" height="1080" fetchpriority="high" />
+    <div class="wrap">
+      <div class="hero-card">
+        <span class="tag" style="align-self:flex-start">Bom Jesus-PI · Praça 7 de Setembro</span>
+        <h1>Consultas e exames, tudo em um só lugar.</h1>
+        <p class="lead">Faça ressonância magnética sem sair de Bom Jesus. Laboratório, exames de imagem e 20 especialidades no mesmo endereço. Marque pelo WhatsApp.</p>
+        <div class="btns">
+          <Wa msg="Olá! Vim pelo site e quero agendar um atendimento." origem="home-hero" />
+          <a class="btn btn-ghost" href="/resultados">Ver resultado de exame</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec-sm bg-branco" aria-label="Atalhos">
+    <div class="wrap grid g4 g4-m2">
+      <a class="card" href="/agendar"><span style="color:var(--vermelho)"><Icon name="agenda" size={26} /></span><strong style="font-size:18px">Agendar consulta</strong><span class="small muted">Escolha a especialidade e fale com a recepção.</span></a>
+      <a class="card" href="/exames"><span style="color:var(--vermelho)"><Icon name="frasco" size={26} /></span><strong style="font-size:18px">Marcar exame</strong><span class="small muted">Mande foto do pedido médico pelo WhatsApp.</span></a>
+      <a class="card" href="/resultados"><span style="color:var(--vermelho)"><Icon name="doc" size={26} /></span><strong style="font-size:18px">Resultados</strong><span class="small muted">Laboratório e imagem, direto no portal.</span></a>
+      <a class="card card-vinho" href="/sobre#urgencia"><span style="color:#f2b8b8"><Icon name="cruz" size={26} /></span><strong style="font-size:18px">Urgência 24h</strong><span class="small">No Hospital Maternidade Dr. Ricardo Xavier.</span></a>
+    </div>
+  </section>
+
+  <section class="sec bg-creme">
+    <div class="wrap">
+      <div class="head-row">
+        <div><p class="eyebrow">Especialidades</p><h2>20 áreas de atendimento em Bom Jesus</h2><p class="lead">Da consulta de rotina ao pré-natal. Toque na área para ver quando procurar e agendar.</p></div>
+        <a class="btn btn-ghost" href="/especialidades">Ver todas <Icon name="seta" size={18} /></a>
+      </div>
+      <div class="grid g4">
+        {especialidades.map((e) => <a class="chip" href={`/especialidades/${e.slug}`}>{e.nome}<Icon name="seta" size={18} /></a>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec bg-branco">
+    <div class="wrap split split-c" style="--cols:1fr 1fr">
+      <img class="foto foto-alta" src="/img/ressonancia.webp" alt="Sala de ressonância magnética da Clínica Dr. Ricardo Xavier" width="900" height="1200" loading="lazy" />
+      <div>
+        <p class="eyebrow">Exames</p>
+        <h2>Ressonância, imagem e laboratório sem sair de Bom Jesus</h2>
+        <p class="lead">Faça a consulta e os exames no mesmo lugar. Envie a foto do pedido médico pelo WhatsApp e a recepção confirma data e preparo.</p>
+        <div class="grid g2" style="gap:10px;margin:24px 0">
+          {exames.map((x) => <a class="chip" href={`/exames/${x.slug}`}>{x.nome}<Icon name="seta" size={18} /></a>)}
+        </div>
+        <Wa msg="Olá! Quero marcar um exame. Vou enviar a foto do pedido médico." label="Marcar exame pelo WhatsApp" origem="home-exames" />
+      </div>
+    </div>
+  </section>
+
+  <section class="sec bg-vinho" id="urgencia">
+    <div class="wrap split split-c" style="--cols:1.2fr 1fr">
+      <div>
+        <p class="eyebrow">{site.hospital}</p>
+        <h2>Urgência 24 horas no mesmo prédio</h2>
+        <p class="lead">Quando não dá para esperar a consulta, a urgência funciona dia e noite na Praça 7 de Setembro. Em risco de vida, ligue 192.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <a class="btn btn-light" href={site.telefoneLink} data-evento="click_telefone"><Icon name="fone" />Ligar {site.telefone}</a>
+        <a class="btn btn-outline-light" href={site.mapa} target="_blank" rel="noopener"><Icon name="pin" />Como chegar</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec bg-branco">
+    <div class="wrap">
+      <p class="eyebrow">Postos de coleta</p>
+      <h2>Coleta perto de você</h2>
+      <p class="lead" style="margin-bottom:36px">Além da sede, a clínica coleta exames em quatro pontos da região.</p>
+      <div class="grid g4">
+        {site.postos.map((p) => <div class="card"><h3 style="margin-bottom:8px">{p.cidade}</h3><span class="small muted">{p.nome}<br />{p.endereco}</span></div>)}
+      </div>
+      <p style="margin-top:24px"><a href="/postos-de-coleta">Ver endereços e como colher</a></p>
+    </div>
+  </section>
+
+  <section class="sec bg-areia">
+    <div class="wrap split">
+      <div><p class="eyebrow">Quem responde pela clínica</p><h2>Responsáveis técnicos</h2><p class="lead">Nomes e registros publicados, como pedem os conselhos profissionais.</p></div>
+      <div class="grid g2">
+        {site.responsaveis.map((r) => (
+          <div class="card"><h3 style="margin:0">{r.nome}</h3><p class="muted" style="margin:6px 0 14px">{r.area}</p><span class="tag">{r.registro}</span></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec bg-branco">
+    <div class="wrap">
+      <div class="head-row"><div><p class="eyebrow">Blog</p><h2>Dúvidas que chegam na recepção</h2></div><a class="btn btn-ghost" href="/blog">Todos os artigos <Icon name="seta" size={18} /></a></div>
+      <div class="grid g3">
+        {posts.slice(0, 3).map((p) => (
+          <a class="card card-creme" href={`/blog/${p.slug}`} style="padding:32px"><span class="tag" style="align-self:flex-start">{p.categoria}</span><strong style="font-size:21px;line-height:1.3">{p.titulo}</strong></a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Faq faqs={faqs} titulo="Antes de marcar" eyebrow="Perguntas frequentes" />
+  <CtaBand msg="Olá! Vim pelo site e quero agendar um atendimento." origem="home-final" />
+</Base>

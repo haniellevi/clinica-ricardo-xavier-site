@@ -1,0 +1,67 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Wa from '../../components/Wa.astro';
+import Faq from '../../components/Faq.astro';
+import Migalhas from '../../components/Migalhas.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { exames } from '../../data/exames';
+import { bySlug } from '../../data/especialidades';
+import { site } from '../../data/site';
+
+export function getStaticPaths() {
+  return exames.map((x) => ({ params: { slug: x.slug }, props: { x } }));
+}
+const { x } = Astro.props;
+const msg = `Olá! Quero marcar ${x.pedido}. Vou enviar a foto do pedido médico.`;
+const esp = x.especialidades.map(bySlug).filter(Boolean);
+const mig = [{ nome: 'Exames', href: '/exames' }, { nome: x.nome, href: `/exames/${x.slug}` }];
+const ld = [
+  { '@context': 'https://schema.org', '@type': 'MedicalWebPage', name: x.titulo, about: { '@type': 'MedicalTest', name: x.nome }, lastReviewed: '2026-09-28', publisher: { '@id': `${site.url}/#clinica` } },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: x.faqs.map((f) => ({ '@type': 'Question', name: f.p, acceptedAnswer: { '@type': 'Answer', text: f.r } })) },
+];
+---
+<Base title={`${x.titulo} | Clínica Dr. Ricardo Xavier`} description={`${x.resumo.split('. ')[0]}. Mande o pedido pelo WhatsApp e receba data e preparo.`.slice(0, 158)} jsonld={ld} migalhas={mig} msg={msg}>
+  <section class="pagina-topo bg-creme">
+    <div class="wrap">
+      <Migalhas itens={mig} />
+      <div class="split" style={`--cols:${x.foto ? '1.2fr 1fr' : '1.4fr 1fr'};gap:56px;align-items:center`}>
+        <div>
+          <p class="eyebrow">Exame</p>
+          <h1>{x.titulo}</h1>
+          <p class="lead" style="font-size:20px">{x.resumo}</p>
+          <div class="btns" style="margin-top:24px"><Wa msg={msg} label="Enviar pedido pelo WhatsApp" origem={`exame-${x.slug}`} /></div>
+        </div>
+        {x.foto
+          ? <img class="foto foto-media" src={x.foto} alt={`Sala de ${x.nome.toLowerCase()} da clínica`} width="900" height="1200" />
+          : <div class="card resposta"><strong>Como marcar</strong><p>Mande a foto do pedido médico para {site.whatsapp}. A recepção confirma se o exame é feito aqui, a data e o preparo.</p></div>}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec bg-branco">
+    <div class="wrap grid g2" style="gap:64px">
+      <div><h2 style="font-size:32px">Para que serve</h2><ul class="lista">{x.paraQue.map((q) => <li>{q}</li>)}</ul></div>
+      <div><h2 style="font-size:32px">Passo a passo</h2><ol class="passos">{x.passos.map((q) => <li>{q}</li>)}</ol></div>
+    </div>
+  </section>
+
+  <section class="sec-sm bg-areia">
+    <div class="wrap split">
+      <div><p class="eyebrow">Preparo</p><h2 style="font-size:32px">Antes do exame</h2></div>
+      <div class="card"><ul class="lista" style="margin:0">{x.preparo.map((q) => <li>{q}</li>)}</ul></div>
+    </div>
+  </section>
+
+  {esp.length > 0 && (
+    <section class="sec-sm bg-branco">
+      <div class="wrap">
+        <h2 style="font-size:32px">Especialidades que costumam pedir</h2>
+        <div class="grid g3" style="margin-top:24px">{esp.map((e) => <a class="chip" href={`/especialidades/${e!.slug}`}>{e!.nome}<Icon name="seta" size={18} /></a>)}</div>
+      </div>
+    </section>
+  )}
+
+  <Faq faqs={x.faqs} titulo={`Perguntas sobre ${x.nome.toLowerCase()}`} bg="bg-creme" />
+  <CtaBand titulo="Mande seu pedido" texto={`Mensagem pronta: “${msg}”`} msg={msg} label="Enviar pedido" origem={`exame-${x.slug}-final`} />
+</Base>

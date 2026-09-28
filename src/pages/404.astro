@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import Wa from '../components/Wa.astro';
+---
+<Base title="Página não encontrada | Clínica Dr. Ricardo Xavier" description="Esta página não existe. Veja especialidades, exames ou agende pelo WhatsApp.">
+  <section class="sec bg-creme">
+    <div class="wrap">
+      <p class="eyebrow">Erro 404</p>
+      <h1>Esta página não existe mais</h1>
+      <p class="lead">O site da clínica mudou. Procure o que precisa abaixo ou fale direto com a recepção.</p>
+      <div class="btns" style="margin-top:24px">
+        <Wa msg="Olá! Não encontrei uma página no site. Podem me ajudar?" label="Falar pelo WhatsApp" origem="404" />
+        <a class="btn btn-ghost" href="/especialidades">Especialidades</a>
+        <a class="btn btn-ghost" href="/exames">Exames</a>
+        <a class="btn btn-ghost" href="/resultados">Resultados</a>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,94 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Wa from '../../components/Wa.astro';
+import Faq from '../../components/Faq.astro';
+import Migalhas from '../../components/Migalhas.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { especialidades } from '../../data/especialidades';
+import { exameBySlug } from '../../data/exames';
+import { site } from '../../data/site';
+
+export function getStaticPaths() {
+  return especialidades.map((e) => ({ params: { slug: e.slug }, props: { e } }));
+}
+const { e } = Astro.props;
+const msg = `Olá! Quero agendar ${e.pedido}.`;
+const relacionados = e.exames.map(exameBySlug).filter(Boolean);
+const mig = [{ nome: 'Especialidades', href: '/especialidades' }, { nome: e.nome, href: `/especialidades/${e.slug}` }];
+const rt = site.responsaveis[0];
+const faqBg = relacionados.length > 0 && !e.responsavel ? 'bg-branco' : 'bg-creme';
+const avisoBg = faqBg === 'bg-branco' ? 'bg-creme' : 'bg-branco';
+const ld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'MedicalWebPage',
+    name: `${e.nome} em Bom Jesus-PI`,
+    about: { '@type': 'MedicalSpecialty', name: e.nome },
+    ...(e.schema ? { specialty: `https://schema.org/${e.schema}` } : {}),
+    lastReviewed: '2026-09-28',
+    publisher: { '@id': `${site.url}/#clinica` },
+  },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: e.faqs.map((f) => ({ '@type': 'Question', name: f.p, acceptedAnswer: { '@type': 'Answer', text: f.r } })) },
+  ...(e.responsavel
+    ? [{ '@context': 'https://schema.org', '@type': 'Physician', name: rt.nome, identifier: rt.registro, medicalSpecialty: ['https://schema.org/Gynecologic', 'https://schema.org/Obstetric'], worksFor: { '@id': `${site.url}/#clinica` } }]
+    : []),
+];
+---
+<Base title={`${e.nome} em Bom Jesus-PI | Clínica Dr. Ricardo Xavier`} description={`${e.resumo.split('. ')[0]}. Agende ${e.nome.toLowerCase()} em Bom Jesus-PI pelo WhatsApp.`.slice(0, 158)} jsonld={ld} migalhas={mig} msg={msg}>
+  <section class="pagina-topo bg-creme">
+    <div class="wrap">
+      <Migalhas itens={mig} />
+      <div class="split" style="--cols:1.4fr 1fr;gap:56px">
+        <div>
+          <p class="eyebrow">{e.medica ? 'Especialidade' : 'Atendimento'}</p>
+          <h1>{e.nome} em Bom Jesus-PI</h1>
+          <p class="lead" style="font-size:20px">{e.resumo}</p>
+          <div class="btns" style="margin-top:24px">
+            <Wa msg={msg} label={`Agendar ${e.nome.toLowerCase()}`} origem={`esp-${e.slug}`} />
+            <a class="btn btn-ghost" href={site.telefoneLink} data-evento="click_telefone"><Icon name="fone" />{site.telefone}</a>
+          </div>
+        </div>
+        <div class="card resposta">
+          <strong>Resposta rápida</strong>
+          <p>{e.resumo.split('. ')[0]}.</p>
+          <p class="small muted">Para marcar, mande mensagem para {site.whatsapp}. Horários e convênios são confirmados pela recepção.</p>
+          {e.medica && <p class="small muted">Sintoma forte ou de repente? Vá à urgência 24h ou ligue 192.</p>}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec bg-branco">
+    <div class="wrap grid g2" style="gap:64px">
+      <div><h2 style="font-size:32px">Quando procurar</h2><ul class="lista">{e.quando.map((q) => <li>{q}</li>)}</ul></div>
+      <div><h2 style="font-size:32px">Como é {e.medica ? 'a consulta' : 'o atendimento'}</h2><ol class="passos">{e.comoE.map((q) => <li>{q}</li>)}</ol></div>
+    </div>
+  </section>
+
+  {e.responsavel && (
+    <section class="sec-sm bg-areia">
+      <div class="wrap split split-c">
+        <div><p class="eyebrow">Responsável técnico da clínica</p><h2 style="font-size:32px;margin:0">{rt.nome}</h2></div>
+        <div class="card"><p style="margin:0 0 10px">{rt.funcao} da Clínica Dr. Ricardo Xavier, com registro de especialista em {rt.area}.</p><span class="tag">{rt.registro}</span></div>
+      </div>
+    </section>
+  )}
+
+  {relacionados.length > 0 && (
+    <section class={`sec-sm ${e.responsavel ? 'bg-branco' : 'bg-areia'}`}>
+      <div class="wrap">
+        <h2 style="font-size:32px">Exames relacionados na clínica</h2>
+        <div class="grid g3" style="margin-top:24px">
+          {relacionados.map((x) => <a class="chip" href={`/exames/${x!.slug}`}>{x!.nome}<Icon name="seta" size={18} /></a>)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <Faq faqs={e.faqs} titulo={`Perguntas sobre ${e.nome.toLowerCase()}`} bg={faqBg} />
+
+  <section class={avisoBg}><div class="wrap"><p class="aviso" style="margin:0;padding:20px 0">Conteúdo informativo, revisado em setembro de 2026. Não substitui a consulta. Em emergência, procure a urgência 24h ou ligue 192.</p></div></section>
+
+  <CtaBand titulo={`Marque ${e.pedido}`} texto={`Mensagem pronta: “${msg}”`} msg={msg} label={`Agendar ${e.nome.toLowerCase()}`} origem={`esp-${e.slug}-final`} />
+</Base>

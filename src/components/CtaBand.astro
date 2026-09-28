@@ -1,0 +1,10 @@
+---
+import Wa from './Wa.astro';
+const { titulo = 'Pronto para marcar?', texto = 'Mande uma mensagem. A recepção responde com os horários.', msg, label = 'Agendar pelo WhatsApp', origem = '' } = Astro.props;
+---
+<section class="cta-band">
+  <div class="wrap">
+    <div><h2>{titulo}</h2><p>{texto}</p></div>
+    <Wa msg={msg} label={label} class="btn btn-light" origem={origem} />
+  </div>
+</section>

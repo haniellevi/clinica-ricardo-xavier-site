@@ -1,0 +1,45 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Wa from '../../components/Wa.astro';
+import Migalhas from '../../components/Migalhas.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { exames, outrosExames } from '../../data/exames';
+const mig = [{ nome: 'Exames', href: '/exames' }];
+const msg = 'Olá! Quero marcar um exame. Vou enviar a foto do pedido médico.';
+---
+<Base title="Exames em Bom Jesus-PI: ressonância, imagem e laboratório | Clínica Dr. Ricardo Xavier" description="Ressonância magnética, exames de imagem, laboratório e exames de especialidade em Bom Jesus-PI. Mande o pedido médico pelo WhatsApp e receba data e preparo." migalhas={mig} msg={msg}>
+  <section class="pagina-topo bg-branco">
+    <div class="wrap">
+      <Migalhas itens={mig} />
+      <div class="split split-c" style="--cols:1.1fr 1fr">
+        <div>
+          <p class="eyebrow">Exames</p>
+          <h1>Exames em Bom Jesus-PI</h1>
+          <p class="lead" style="font-size:20px">Ressonância, imagem, laboratório e exames de especialidade na sede da clínica. Mande a foto do pedido médico e a recepção responde com data e preparo.</p>
+          <div class="btns" style="margin-top:24px"><Wa msg={msg} label="Enviar pedido pelo WhatsApp" origem="exames-topo" /></div>
+        </div>
+        <img class="foto foto-media" src="/img/ressonancia.webp" alt="Sala de ressonância magnética da clínica" width="900" height="1200" />
+      </div>
+    </div>
+  </section>
+  <section class="sec bg-creme">
+    <div class="wrap">
+      <h2>Escolha o tipo de exame</h2>
+      <div class="grid g3" style="margin-top:28px">
+        {exames.map((x) => (
+          <a class="card" href={`/exames/${x.slug}`} style="padding:28px"><h3 style="margin:0">{x.nome}</h3><span class="small muted">{x.resumo.split('. ')[0]}.</span><span style="color:var(--vermelho);font-weight:700;display:flex;gap:8px;align-items:center;margin-top:6px">Ver detalhes <Icon name="seta" size={18} /></span></a>
+        ))}
+      </div>
+      <p class="small muted" style="margin-top:24px">A clínica também faz exames {outrosExames.join(', ').replace(/, ([^,]*)$/, ' e $1')}. Pergunte pelo WhatsApp.</p>
+    </div>
+  </section>
+  <section class="sec-sm bg-vinho">
+    <div class="wrap grid g3" style="gap:40px">
+      <div><span class="num">1</span><h3 style="margin:8px 0">Mande o pedido</h3><p>Foto do pedido médico pelo WhatsApp.</p></div>
+      <div><span class="num">2</span><h3 style="margin:8px 0">Receba o preparo</h3><p>Data, horário, jejum e o que levar.</p></div>
+      <div><span class="num">3</span><h3 style="margin:8px 0">Veja o resultado online</h3><p>No <a href="/resultados" style="color:#fff">portal de laboratório ou de imagem</a>.</p></div>
+    </div>
+  </section>
+  <CtaBand titulo="Tem um pedido de exame?" texto="Mande a foto. A recepção responde com data e preparo." msg={msg} label="Enviar pedido" origem="exames-final" />
+</Base>
